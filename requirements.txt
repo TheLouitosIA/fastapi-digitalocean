@@ -68,7 +68,7 @@ huggingface-hub==0.25.1
 humanfriendly==10.0
 idna==3.7
 imageio==2.36.0
-importlib==1.0.4
+# importlib==1.0.4
 importlib-metadata==7.0.1
 ipykernel==6.29.5
 ipython==8.28.0
