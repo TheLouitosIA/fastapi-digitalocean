@@ -10,6 +10,8 @@ WORKDIR /app
 # Copier les fichiers de l'application dans le conteneur
 COPY . /app
 
+RUN pip install --no-cache-dir setuptools wheel
+
 # Installer les dépendances
 RUN pip install --no-cache-dir -r requirements.txt
 
