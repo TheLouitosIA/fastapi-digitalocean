@@ -1,23 +1,20 @@
-# Utilise une image Python légère
-FROM python:3.11-slim
+# Utiliser une image Python comme base
+FROM python:3.9-slim
 
-# Définit le répertoire de travail à l'intérieur du conteneur
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copie le fichier de dépendances
-COPY requirements.txt .
+# Copier les fichiers de l'application dans le conteneur
+COPY . /app
 
-# Installe pip, setuptools, et wheel pour s'assurer que l'environnement est prêt pour les installations
+# Mettre à jour pip et installer setuptools et wheel pour éviter les erreurs
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-# Installe les dépendances de l'application
+# Installer les dépendances de l'application
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copie tout le code de l'application dans le conteneur
-COPY . .
-
-# Expose le port 8000 pour accéder à l'application
+# Exposer le port utilisé par FastAPI
 EXPOSE 8000
 
-# Commande pour lancer l'application avec Uvicorn
+# Commande pour lancer l'application
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
