@@ -1,5 +1,5 @@
-# Utiliser une image Python comme base
-FROM python:3.9-slim
+# Utiliser une image Python 3.11 comme base
+FROM python:3.11-slim
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -7,10 +7,7 @@ WORKDIR /app
 # Copier les fichiers de l'application dans le conteneur
 COPY . /app
 
-# Mettre à jour pip et installer setuptools et wheel pour éviter les erreurs
-RUN pip install --no-cache-dir --upgrade pip setuptools wheel
-
-# Installer les dépendances de l'application
+# Installer les dépendances
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Exposer le port utilisé par FastAPI
