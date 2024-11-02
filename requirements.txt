@@ -99,7 +99,7 @@ nbformat==5.10.4
 nest-asyncio==1.6.0
 networkx==3.3
 ninja==1.11.1.1
-numpy==2.1.2
+numpy==1.24.4
 onnx==1.17.0
 opencv-python==4.10.0.84
 opencv-python-headless==4.10.0.84
@@ -112,7 +112,7 @@ packaging==23.2
 pandocfilters==1.5.1
 parso==0.8.4
 pickleshare==0.7.5
-pillow==11.0.0
+pillow==10.0.0
 platformdirs==3.2.0
 prometheus_client==0.21.0
 prompt_toolkit==3.0.48
@@ -139,8 +139,6 @@ python-dotenv==1.0.1
 python-json-logger==2.0.7
 python-multipart==0.0.17
 pytz==2023.3
-pywin32==306
-pywinpty==2.0.13
 PyYAML==6.0.2
 pyzmq==26.2.0
 referencing==0.32.1
