@@ -1,6 +1,9 @@
 # Utiliser une image Python 3.11 comme base
 FROM python:3.11-slim
 
+# Installer les dépendances de développement PostgreSQL
+RUN apt-get update && apt-get install -y libpq-dev gcc && rm -rf /var/lib/apt/lists/*
+
 # Définir le répertoire de travail
 WORKDIR /app
 
