@@ -7,10 +7,10 @@ WORKDIR /app
 # Copie le fichier de dépendances
 COPY requirements.txt .
 
-# Installe les dépendances nécessaires, y compris setuptools et pip
-RUN pip install --no-cache-dir --upgrade pip setuptools
+# Installe pip, setuptools, et wheel pour s'assurer que l'environnement est prêt pour les installations
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-# Installe les dépendances de votre application
+# Installe les dépendances de l'application
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copie tout le code de l'application dans le conteneur
