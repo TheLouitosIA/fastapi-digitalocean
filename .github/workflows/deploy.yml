@@ -12,11 +12,6 @@ jobs:
     steps:
       - name: Cloner le dépôt
         uses: actions/checkout@v2
-
-      - name: Debug SSH
-        run: |
-          ls -la ~/.ssh
-          cat ~/.ssh/known_hosts
       
       - name: Configurer SSH
         env:
@@ -26,6 +21,9 @@ jobs:
           echo "$SSH_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H "90.121.101.181" >> ~/.ssh/known_hosts
+      
+      - name: Vérifier le contenu du dossier SSH
+        run: ls -la ~/.ssh
       
       - name: Déployer sur le serveur
         run: |
