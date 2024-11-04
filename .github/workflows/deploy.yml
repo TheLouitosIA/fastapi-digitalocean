@@ -18,25 +18,33 @@ jobs:
         run: |
           python -m venv venv
           .\venv\Scripts\Activate
-
+          
       - name: Setup Python environment on Unix
         if: ${{ runner.os != 'Windows' }}
         run: |
           python -m venv venv
           source venv/bin/activate
-
+          
       - name: Installer les dépendances
         run: |
           venv\Scripts\pip install -r requirements.txt
-
+          
       - name: Configurer l'authtoken ngrok
         run: |
           ngrok config add-authtoken 2NQ1kLappbIbXUFI4mTuakB1vyM_7dZnj3yQDVSU7Hiru2RRw
-
+          
       - name: Démarrer l'application FastAPI avec ngrok
         run: |
           chmod +x start_app.sh
-          ./start_app.sh
+          ./start_app.sh &  # Lancer l'application en arrière-plan
 
-
-
+      - name: Récupérer le lien ngrok
+        run: |
+          # Attendre que ngrok démarre et configure le tunnel
+          sleep 5
+          # Utiliser l'API locale pour récupérer l'URL
+          curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url' > ngrok_url.txt
+          
+      - name: Afficher le lien ngrok
+        run: |
+          cat ngrok_url.txt
