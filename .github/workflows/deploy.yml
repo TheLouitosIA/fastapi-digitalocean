@@ -39,8 +39,10 @@ jobs:
           ./start_app.sh
 
       - name: Afficher l'URL ngrok
+        shell: pwsh
         run: |
-          sleep 5  # Attend que ngrok démarre
-          ngrok_url=$(grep -o 'https://[a-z0-9]*\.ngrok\.io' ngrok.log | head -1)
-          echo "URL publique de ngrok: $ngrok_url"
+          Start-Sleep -Seconds 5  # Attend que ngrok démarre
+          $ngrok_url = Select-String -Path "ngrok.log" -Pattern "https://[a-z0-9]*\.ngrok\.io" | Select-Object -First 1 | ForEach-Object { $_.Matches[0].Value }
+          Write-Output "URL publique de ngrok: $ngrok_url"
+
 
