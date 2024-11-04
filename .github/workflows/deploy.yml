@@ -13,11 +13,14 @@ jobs:
       - name: Cloner le dépôt
         uses: actions/checkout@v2
 
-      - name: Setup Python environment on Windows
-        if: ${{ runner.os == 'Windows' }}
+      - name: Setup Python environment
         run: |
           python -m venv venv
-          .\venv\Scripts\Activate
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            .\venv\Scripts\Activate
+          else
+            source venv/bin/activate
+          fi
 
       - name: Setup Python environment on Unix
         if: ${{ runner.os != 'Windows' }}
