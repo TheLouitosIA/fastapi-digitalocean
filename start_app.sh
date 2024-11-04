@@ -1,8 +1,10 @@
-# start_app.sh
 #!/bin/bash
 
-# Démarre l'application FastAPI
-uvicorn app:app --host 0.0.0.0 --port 8000 &
+# Activer l'environnement virtuel
+source venv/bin/activate
 
-# Démarre ngrok pour exposer le port 8000
-ngrok http 8000
+# Démarrer l'application FastAPI
+uvicorn app:app --host 0.0.0.0 --port 80 &
+
+# Lancer ngrok avec le sous-domaine statique configuré dans ngrok.yml
+ngrok start default
