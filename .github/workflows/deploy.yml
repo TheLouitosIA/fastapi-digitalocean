@@ -29,9 +29,17 @@ jobs:
         run: |
           venv\Scripts\pip install -r requirements.txt
 
-      # Supprimer la configuration authtoken puisque déjà spécifiée dans ngrok.yml
-          
       - name: Démarrer l'application FastAPI avec ngrok
         run: |
           chmod +x start_app.sh
-          ./start_app.sh
+          ./start_app.sh &
+      
+      - name: Attendre ngrok et récupérer l'URL
+        run: |
+          sleep 10  # Attendre que ngrok démarre
+          NGROK_URL=$(curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
+          echo "L'URL publique ngrok est : $NGROK_URL" > ngrok_url.txt
+      
+      - name: Afficher l'URL ngrok
+        run: |
+          cat ngrok_url.txt
