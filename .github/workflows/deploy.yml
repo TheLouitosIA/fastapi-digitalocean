@@ -1,37 +1,28 @@
-name: Deploy FastAPI with ngrok
+name: Déployer FastAPI sur le serveur local
 
 on:
   push:
     branches:
-      - main
+      - main  # Déclenche le workflow lors d'un push sur la branche principale
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout code
+      - name: Cloner le dépôt
         uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.11'
-
-      - name: Install dependencies
+      
+      - name: Configurer SSH
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
-          pip install -r requirements.txt
-
-      - name: Run FastAPI
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "VOTRE_IP" >> ~/.ssh/known_hosts
+      
+      - name: Déployer sur le serveur
         run: |
-          nohup uvicorn app:app --host 0.0.0.0 --port 8000 &
-
-      - name: Install ngrok
-        run: |
-          curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc > /dev/null
-          echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
-          sudo apt update && sudo apt install ngrok
-
-      - name: Run ngrok
-        run: |
-          nohup ngrok http 8000 > ngrok.log &
+          ssh -o StrictHostKeyChecking=no louis@10.146.6.137 "pkill -f uvicorn || true"
+          ssh -o StrictHostKeyChecking=no louis@10.146.6.137 "cd E:\AXELIA && nohup uvicorn app:app --host 0.0.0.0 --port 8000 &"
