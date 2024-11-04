@@ -1,31 +1,25 @@
-name: Déployer FastAPI sur le serveur local
+name: Déploiement sur Serveur Personnel
 
 on:
   push:
     branches:
-      - main  # Déclenche le workflow lors d'un push sur la branche principale
+      - main  # Déclenchement lors de push sur la branche principale
+  workflow_dispatch:  # Permet le déclenchement manuel du workflow
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-    
+    runs-on: [self-hosted]
     steps:
       - name: Cloner le dépôt
         uses: actions/checkout@v2
-      
-      - name: Configurer SSH
-        env:
-          SSH_KEY: ${{ secrets.SSH_KEY }}
+
+      - name: Installer les dépendances
         run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H "90.121.101.181" >> ~/.ssh/known_hosts
-      
-      - name: Vérifier le contenu du dossier SSH
-        run: ls -la ~/.ssh
-      
-      - name: Déployer sur le serveur
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Démarrer l'application FastAPI avec ngrok
         run: |
-          ssh -o StrictHostKeyChecking=no louis@90.121.101.181 "pkill -f uvicorn || true"
-          ssh -o StrictHostKeyChecking=no louis@90.121.101.181 "cd /chemin/vers/AXELIA && nohup uvicorn app:app --host 0.0.0.0 --port 8000 &"
+          chmod +x start_app.sh
+          ./start_app.sh
