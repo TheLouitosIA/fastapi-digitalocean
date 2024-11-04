@@ -3,8 +3,8 @@ name: Déploiement sur Serveur Personnel
 on:
   push:
     branches:
-      - main  # Déclenchement lors de push sur la branche principale
-  workflow_dispatch:  # Permet le déclenchement manuel du workflow
+      - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -27,28 +27,33 @@ jobs:
           
       - name: Installer les dépendances
         run: |
-          venv\Scripts\pip install -r requirements.txt
+          if [ $RUNNER_OS == "Windows" ]; then
+            venv\Scripts\pip install -r requirements.txt
+          else
+            source venv/bin/activate && pip install -r requirements.txt
+          fi
           
-      - name: Configurer l'authtoken ngrok
+      - name: Configurer l'authtoken et le sous-domaine ngrok
         run: |
           ngrok config add-authtoken 2NQ1kLappbIbXUFI4mTuakB1vyM_7dZnj3yQDVSU7Hiru2RRw
-          
+          echo "region: us" >> ~/.ngrok2/ngrok.yml  # Changez la région si nécessaire
+
       - name: Démarrer l'application FastAPI avec ngrok
         run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            Start-Process "start_app.sh"
-          else
-            chmod +x start_app.sh
-            ./start_app.sh &
-          fi
-
-      - name: Récupérer le lien ngrok
-        run: |
-          # Attendre que ngrok démarre et configure le tunnel
-          sleep 5
-          # Utiliser l'API locale pour récupérer l'URL
-          curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url' > ngrok_url.txt
+          chmod +x scripts/start_app.sh
+          ./scripts/start_app.sh
           
-      - name: Afficher le lien ngrok
+      - name: Lancer ngrok avec un sous-domaine statique
         run: |
-          cat ngrok_url.txt
+          nohup ngrok http --region=us --subdomain=kid-aware-loon 8000 > ngrok.log &
+
+      - name: Récupérer l'URL ngrok
+        run: |
+          sleep 5  # Attend que ngrok démarre
+          if [ -f ngrok.log ]; then
+            ngrok_url=$(grep -o 'https://[a-z0-9]*\.ngrok-free\.app' ngrok.log | head -1)
+            echo "URL publique de ngrok: $ngrok_url"
+          else
+            echo "Erreur : Le fichier ngrok.log n'a pas été créé."
+            exit 1
+          fi
