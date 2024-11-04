@@ -3,8 +3,8 @@ name: Déploiement sur Serveur Personnel
 on:
   push:
     branches:
-      - main
-  workflow_dispatch:
+      - main  # Déclenchement lors de push sur la branche principale
+  workflow_dispatch:  # Permet le déclenchement manuel du workflow
 
 jobs:
   deploy:
@@ -27,33 +27,11 @@ jobs:
           
       - name: Installer les dépendances
         run: |
-          if [ $RUNNER_OS == "Windows" ]; then
-            venv\Scripts\pip install -r requirements.txt
-          else
-            source venv/bin/activate && pip install -r requirements.txt
-          fi
-          
-      - name: Configurer l'authtoken et le sous-domaine ngrok
-        run: |
-          ngrok config add-authtoken 2NQ1kLappbIbXUFI4mTuakB1vyM_7dZnj3yQDVSU7Hiru2RRw
-          echo "region: us" >> ~/.ngrok2/ngrok.yml  # Changez la région si nécessaire
+          venv\Scripts\pip install -r requirements.txt
 
+      # Supprimer la configuration authtoken puisque déjà spécifiée dans ngrok.yml
+          
       - name: Démarrer l'application FastAPI avec ngrok
         run: |
           chmod +x scripts/start_app.sh
           ./scripts/start_app.sh
-          
-      - name: Lancer ngrok avec un sous-domaine statique
-        run: |
-          nohup ngrok http --region=us --subdomain=kid-aware-loon 8000 > ngrok.log &
-
-      - name: Récupérer l'URL ngrok
-        run: |
-          sleep 5  # Attend que ngrok démarre
-          if [ -f ngrok.log ]; then
-            ngrok_url=$(grep -o 'https://[a-z0-9]*\.ngrok-free\.app' ngrok.log | head -1)
-            echo "URL publique de ngrok: $ngrok_url"
-          else
-            echo "Erreur : Le fichier ngrok.log n'a pas été créé."
-            exit 1
-          fi
