@@ -33,5 +33,5 @@ jobs:
           
       - name: Démarrer l'application FastAPI avec ngrok
         run: |
-          chmod +x scripts/start_app.sh
-          ./scripts/start_app.sh
+          chmod +x start_app.sh
+          ./start_app.sh
