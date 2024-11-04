@@ -17,12 +17,12 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
-          mkdir -p .ssh
-          echo "$SSH_KEY" > .ssh/id_rsa
-          chmod 600 .ssh/id_rsa
-          ssh-keyscan -H "90.121.101.181" >> .ssh/known_hosts
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "90.121.101.181" >> ~/.ssh/known_hosts
       
       - name: Déployer sur le serveur
         run: |
           ssh -o StrictHostKeyChecking=no louis@90.121.101.181 "pkill -f uvicorn || true"
-          ssh -o StrictHostKeyChecking=no louis@90.121.101.181 "cd E:\AXELIA && nohup uvicorn app:app --host 0.0.0.0 --port 8000 &"
+          ssh -o StrictHostKeyChecking=no louis@90.121.101.181 "cd /chemin/vers/AXELIA && nohup uvicorn app:app --host 0.0.0.0 --port 8000 &"
