@@ -29,6 +29,10 @@ jobs:
         run: |
           venv\Scripts\pip install -r requirements.txt
 
+      - name: Configurer l'authtoken ngrok
+        run: |
+          ngrok config add-authtoken 2NQ1kLappbIbXUFI4mTuakB1vyM_7dZnj3yQDVSU7Hiru2RRw
+
       - name: Démarrer l'application FastAPI avec ngrok
         run: |
           chmod +x start_app.sh
