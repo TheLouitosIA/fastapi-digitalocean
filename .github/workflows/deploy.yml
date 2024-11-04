@@ -35,8 +35,12 @@ jobs:
           
       - name: Démarrer l'application FastAPI avec ngrok
         run: |
-          chmod +x start_app.sh
-          ./start_app.sh &  # Lancer l'application en arrière-plan
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            Start-Process "start_app.sh"
+          else
+            chmod +x start_app.sh
+            ./start_app.sh &
+          fi
 
       - name: Récupérer le lien ngrok
         run: |
