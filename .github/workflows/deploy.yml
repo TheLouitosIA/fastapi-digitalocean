@@ -12,6 +12,11 @@ jobs:
     steps:
       - name: Cloner le dépôt
         uses: actions/checkout@v2
+
+      - name: Debug SSH
+        run: |
+          ls -la ~/.ssh
+          cat ~/.ssh/known_hosts
       
       - name: Configurer SSH
         env:
