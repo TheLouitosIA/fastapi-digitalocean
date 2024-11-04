@@ -38,12 +38,5 @@ jobs:
           chmod +x start_app.sh
           ./start_app.sh
 
-      - name: Afficher l'URL ngrok
-        shell: bash
-        run: |
-          sleep 5  # Attend que ngrok démarre
-          ngrok_url=$(grep -o 'https://[a-z0-9]*\.ngrok\.io' ngrok.log | head -1)
-          echo "URL publique de ngrok: $ngrok_url"
-
 
 
