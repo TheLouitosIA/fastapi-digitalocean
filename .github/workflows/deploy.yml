@@ -34,3 +34,31 @@ jobs:
         run: |
           chmod +x start_app.sh
           ./start_app.sh &
+
+jobs:
+  deploy:
+    runs-on: [self-hosted]
+    steps:
+      - name: Cloner le dépôt
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Installer les dépendances du frontend
+        run: |
+          cd frontend
+          npm install
+
+      - name: Construire l’application React
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Déployer l’application frontend
+        run: |
+          # Copie des fichiers construits vers le répertoire d'hébergement
+          cp -r frontend/build/* /path/to/your/web/server
+
