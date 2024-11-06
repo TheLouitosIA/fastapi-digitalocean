@@ -35,13 +35,6 @@ jobs:
           chmod +x start_app.sh
           ./start_app.sh &
 
-jobs:
-  deploy:
-    runs-on: [self-hosted]
-    steps:
-      - name: Cloner le dépôt
-        uses: actions/checkout@v2
-
       - name: Setup Node.js environment
         uses: actions/setup-node@v2
         with:
@@ -59,6 +52,4 @@ jobs:
 
       - name: Déployer l’application frontend
         run: |
-          # Copie des fichiers construits vers le répertoire d'hébergement
-          cp -r frontend/build/* /path/to/your/web/server
-
+          cp -r frontend/build/* "E:/AXELIA/frontend"
