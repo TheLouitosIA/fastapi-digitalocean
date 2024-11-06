@@ -30,6 +30,7 @@ jobs:
           venv\Scripts\pip install -r requirements.txt
 
       - name: Démarrer l'application FastAPI avec ngrok
+        shell: bash
         run: |
           chmod +x start_app.sh
           ./start_app.sh &
