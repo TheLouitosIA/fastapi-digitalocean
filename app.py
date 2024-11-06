@@ -244,7 +244,7 @@ async def detect_vehicle(utilisateur_id: int, type_photo: str, image: UploadFile
         cur.execute("""
             SELECT COUNT(*)
             FROM photos
-            WHERE utilisateur_id = %s AND date_prise LIKE %s AND statut_validation = 'validé'
+            WHERE utilisateur_id = %s AND date_trunc('month', date_prise) = date_trunc('month', %s::timestamp) AND statut_validation = 'validé'
         """, (utilisateur_id, f"{mois_verification}%"))
 
         photos_valides = cur.fetchone()[0]
