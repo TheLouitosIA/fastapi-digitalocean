@@ -14,19 +14,28 @@ from datetime import date
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, EmailStr, constr, field_validator
 import re
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 date_prise = datetime.now().isoformat()  # Format ISO pour la date et heure actuelle
 API_TOKEN = "AXL_api_key_validation314"
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Port 3000 pour React
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Modèle Pydantic pour les utilisateurs
 class User(BaseModel):
-    nom: constr(min_length=2, max_length=50) # type: ignore
-    prenom: constr(min_length=2, max_length=50) # type: ignore
+    nom: constr(min_length=2, max_length=50)  # type: ignore
+    prenom: constr(min_length=2, max_length=50)  # type: ignore
     email: EmailStr
     telephone: str
-    marque_voiture: constr(min_length=2, max_length=50) # type: ignore
-    plaque_immatriculation: constr(min_length=2, max_length=15) # type: ignore
+    marque_voiture: constr(min_length=2, max_length=50)  # type: ignore
+    plaque_immatriculation: constr(min_length=2, max_length=15)  # type: ignore
 
     @field_validator('telephone')
     def telephone_format(cls, v):
@@ -113,7 +122,7 @@ async def detect_vehicle(utilisateur_id: int, type_photo: str, image: UploadFile
             SELECT COUNT(*)
             FROM photos
             WHERE utilisateur_id = %s 
-            AND date_trunc('month', date_prise) = date_trunc('month', %s::timestamp) 
+            AND date_trunc('month', date_prise) = date_trunc('month', %s::timestamp)
             AND statut_validation = 'validé'
         """, (utilisateur_id, mois_verification + "-01"))
 
