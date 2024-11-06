@@ -52,4 +52,6 @@ jobs:
 
       - name: Déployer l’application frontend
         run: |
+          Remove-Item -Recurse -Force "E:/AXELIA/frontend/static"
           cp -r frontend/build/* "E:/AXELIA/frontend"
+
